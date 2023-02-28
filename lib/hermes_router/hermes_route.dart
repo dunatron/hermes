@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hermes/hermes_router/path_utils.dart';
+import 'package:hermes/hermes_router/typedefs.dart';
 
 /// The base class for [HermesRoute] and [HermesShellRoute].
 ///
@@ -89,6 +91,7 @@ import 'package:flutter/material.dart';
 /// else /:username route will be used.
 /// ///
 
+@immutable
 abstract class RouteBase {
   const RouteBase._({
     this.routes = const <RouteBase>[],
@@ -98,16 +101,37 @@ abstract class RouteBase {
   final List<RouteBase> routes;
 }
 
-class HermesRoute {
+class HermesRoute extends RouteBase {
+  HermesRoute({
+    required this.path,
+    required this.name,
+    required this.builder,
+    this.redirect,
+    super.routes = const <RouteBase>[],
+  }) : super._() {
+    // cache the path regexp and parameters
+    _pathRE = patternToRegExp(path, pathParams);
+  }
+
   final String name;
   final String path;
-  final WidgetBuilder builder;
-  final List<HermesRoute> routes;
+  final HermesRouterWidgetBuilder builder;
 
-  HermesRoute({
-    required this.name,
-    required this.path,
-    required this.builder,
-    this.routes = const [],
-  });
+  final HermesRouterRedirect? redirect;
+
+  RegExpMatch? matchPatternAsPrefix(String loc) =>
+      _pathRE.matchAsPrefix(loc) as RegExpMatch?;
+
+  /// Extract the path parameters from a match.
+  Map<String, String> extractPathParams(RegExpMatch match) =>
+      extractPathParameters(pathParams, match);
+
+  final List<String> pathParams = <String>[];
+
+  @override
+  String toString() {
+    return 'GoRoute(name: $name, path: $path)';
+  }
+
+  late final RegExp _pathRE;
 }
