@@ -1,10 +1,16 @@
-# hermes
+# Hermes
 
-A new Flutter project.
+Hermes is a project for the Dart programming language and specifically the flutter framework.
+
+Its aim is to provide a set of opinionated tools to aid in rapid development of a flutter app
+
+features will include:
+
+- `HermesRouter` responsible for performing routing in the flutter application
 
 ## hermes_router
 
-The Hermes router is responsible for performing web based routing in the flutter application
+The Hermes router is responsible for performing routing in the flutter application
 
 ## Hermes Router Proposed Usage
 
